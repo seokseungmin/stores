@@ -231,6 +231,7 @@ public class StoreServiceImpl implements StoreService {
             for (Reservation reservation : reservations) {
                 ReservationStateCheckDto dto = new ReservationStateCheckDto();
                 dto.setReservationTime(reservation.getReservationTime());
+                dto.setStoreName(reservation.getStore().getName());
                 dto.setReservationState(reservation.getStatus().toString());
                 dto.setUsername(reservation.getUser().getUsername());
                 reservationList.add(dto);

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class ReservationStateCheckDto {
     @NotNull(message = "Reservation time is required")
     private LocalDateTime reservationTime;
+    private String storeName;
     private String reservationState;
     private String username;
 }
