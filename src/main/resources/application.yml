@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/reservation_db  # MariaDB 데이터베이스 URL
+    driver-class-name: org.mariadb.jdbc.Driver        # MariaDB JDBC 드라이버 클래스
+    username: root                                    # 데이터베이스 사용자명
+    password: '*seoksm1017*'                                  # 데이터베이스 비밀번호
+
+  jpa:
+    hibernate:
+      ddl-auto: update                                # 애플리케이션 시작 시 DB 스키마를 자동으로 업데이트
+      generate-ddl: true
+    show-sql: true                                    # 실행된 SQL 쿼리를 출력
+    properties:
+      hibernate:
+        format_sql: true                              # 출력되는 SQL 쿼리를 포맷팅
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true                                 # Hidden method 필터 활성화 (HTML 폼에서 PUT, DELETE 등 지원)
+
+#logging:
+#  level:
+#    root: TRACE           # 전체 애플리케이션에 대한 기본 로그 레벨을 TRACE로 설정
+#    org.springframework: TRACE  # Spring Framework 관련 로그 레벨을 TRACE로 설정
+#    com.springboot.stores: TRACE # 특정 패키지에 대한 로그 레벨을 TRACE로 설정 (예: com.springboot.stores)
