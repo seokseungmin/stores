@@ -75,6 +75,7 @@ public class StoreServiceImpl implements StoreService {
 
     // 매장 정보 수정하는 함수
     @Override
+    @Transactional
     public ServiceResult modifyStore(StoreModifyDto storeDto, String token) {
 
         // 이메일과 권한을 토큰에서 추출
@@ -102,6 +103,11 @@ public class StoreServiceImpl implements StoreService {
         if (!Role.ROLE_PARTNER.equals(Role.valueOf(role))) {
             throw new BizException("파트너 권한이 필요합니다.");
         }
+
+        // 매장 수정하면 매장 예약정보 삭제처리
+        reservationRepository.deleteByStoreId(store.getId());
+        // 매장 수정하면 리뷰 정보 삭제처리
+        reviewRepository.deleteByStoreId(store.getId());
 
         store.setName(storeDto.getNewName());
         store.setLocation(storeDto.getLocation());
