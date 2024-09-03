@@ -1,10 +1,7 @@
 package com.springboot.stores.common.model;
 
 
-import com.springboot.stores.dto.ReservationStateCheckDto;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 public class ResponseResult {
 

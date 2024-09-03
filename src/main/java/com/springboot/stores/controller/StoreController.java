@@ -3,22 +3,21 @@ package com.springboot.stores.controller;
 import com.springboot.stores.common.model.ResponseError;
 import com.springboot.stores.common.model.ResponseResult;
 import com.springboot.stores.common.model.ServiceResult;
-import com.springboot.stores.dto.*;
+import com.springboot.stores.dto.StoreDeleteDto;
+import com.springboot.stores.dto.StoreDto;
+import com.springboot.stores.dto.StoreModifyDto;
+import com.springboot.stores.dto.StoreRegistrationDto;
 import com.springboot.stores.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -98,12 +97,5 @@ public class StoreController {
         return ResponseResult.success("매장 리스트 반환 성공!", stores);
     }
 
-    // API 매장 점주 예약 정보 리스트 확인
-    @PostMapping("/checkReservations")
-    public ResponseEntity<?> checkReservations(@RequestHeader("STORE-TOKEN") String token,
-                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<ReservationStateCheckDto> stores = storeService.checkReservations(token, date);
-        return ResponseResult.success("예약체크 리스트 반환 성공!", stores);
-    }
 
 }

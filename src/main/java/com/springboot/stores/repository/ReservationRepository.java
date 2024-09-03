@@ -15,9 +15,13 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     void deleteByStoreId(Long id);
+
     Optional<Reservation> findByUserAndReservationTime(User user, LocalDateTime requestedReservationTime);
+
     boolean existsByStoreAndReservationTime(Store store, LocalDateTime reservationTime);
+
     boolean existsByUserAndStoreAndStatus(User user, Store store, ReservationStatus reservationStatus);
+
     @Query("SELECT r FROM Reservation r WHERE r.store.name = :storeName AND DATE(r.reservationTime) = DATE(:reservationDate)")
     List<Reservation> findReservationsByStoreNameAndDate(
             @Param("storeName") String storeName,

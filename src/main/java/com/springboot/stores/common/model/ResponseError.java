@@ -29,7 +29,7 @@ public class ResponseError {
         List<ResponseError> responseErrors = new ArrayList<>();
         if (errors != null) {
             errors.stream().forEach((e) -> {
-                responseErrors.add(ResponseError.of((FieldError)e));
+                responseErrors.add(ResponseError.of((FieldError) e));
             });
         }
         return responseErrors;

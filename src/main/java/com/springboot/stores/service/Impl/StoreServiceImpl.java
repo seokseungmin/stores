@@ -1,7 +1,6 @@
 package com.springboot.stores.service.Impl;
 
-import com.springboot.stores.common.exception.UserNotFoundException;
-import com.springboot.stores.common.exception.NeedParterRoleException;
+import com.springboot.stores.common.exception.BizException;
 import com.springboot.stores.common.model.ServiceResult;
 import com.springboot.stores.common.util.DistanceCalculator;
 import com.springboot.stores.common.util.JWTUtils;
@@ -45,19 +44,19 @@ public class StoreServiceImpl implements StoreService {
 
         // 권한 체크
         if (!Role.ROLE_PARTNER.equals(Role.valueOf(role))) {
-            return ServiceResult.fail("파트너 권한이 필요합니다.");
+            throw new BizException("파트너 권한이 필요합니다.");
         }
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (optionalUser.isEmpty()) {
-            return ServiceResult.fail("사용자를 찾을 수 없습니다.");
+            throw new BizException("사용자를 찾을 수 없습니다.");
         }
 
         User user = optionalUser.get();
 
         if (storeRepository.countByName(storeDto.getName()) > 0) {
-            return ServiceResult.fail("이미 존재하는 매장 이름입니다.");
+            throw new BizException("이미 존재하는 매장 이름입니다.");
         }
 
         storeRepository.save(Store.builder()
@@ -84,24 +83,24 @@ public class StoreServiceImpl implements StoreService {
 
         Optional<Store> optionalStore = storeRepository.findByName(storeDto.getName());
         if (optionalStore.isEmpty()) {
-            return ServiceResult.fail("해당 매장이 존재하지 않습니다.");
+            throw new BizException("해당 매장이 존재하지 않습니다.");
         }
 
         Optional<User> optionalEmail = userRepository.findByEmail(email);
         if (optionalEmail.isEmpty()) {
-            return ServiceResult.fail("매장 점주가 존재하지 않습니다.");
+            throw new BizException("매장 점주가 존재하지 않습니다.");
         }
 
         User user = optionalEmail.get();
         Store store = optionalStore.get();
 
         if (!store.getOwner().getId().equals(user.getId())) {
-            return ServiceResult.fail("해당 매장의 점주가 아닙니다.");
+            throw new BizException("해당 매장의 점주가 아닙니다.");
         }
 
         // 권한 체크
         if (!Role.ROLE_PARTNER.equals(Role.valueOf(role))) {
-            return ServiceResult.fail("파트너 권한이 필요합니다.");
+            throw new BizException("파트너 권한이 필요합니다.");
         }
 
         store.setName(storeDto.getNewName());
@@ -126,24 +125,24 @@ public class StoreServiceImpl implements StoreService {
 
         Optional<Store> optionalStore = storeRepository.findByName(storeDeleteDto.getName());
         if (optionalStore.isEmpty()) {
-            return ServiceResult.fail("해당 매장이 존재하지 않습니다.");
+            throw new BizException("해당 매장이 존재하지 않습니다.");
         }
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            return ServiceResult.fail("매장 점주가 존재하지 않습니다.");
+            throw new BizException("매장 점주가 존재하지 않습니다.");
         }
 
         Store store = optionalStore.get();
         User user = optionalUser.get();
 
         if (!store.getOwner().getId().equals(user.getId())) {
-            return ServiceResult.fail("해당 매장의 점주가 아닙니다.");
+            throw new BizException("해당 매장의 점주가 아닙니다.");
         }
 
         // 권한 체크
         if (!Role.ROLE_PARTNER.equals(Role.valueOf(role))) {
-            return ServiceResult.fail("파트너 권한이 필요합니다.");
+            throw new BizException("파트너 권한이 필요합니다.");
         }
 
         reviewRepository.deleteByStoreId(store.getId());
@@ -214,12 +213,12 @@ public class StoreServiceImpl implements StoreService {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException("사용자가 존재하지 않습니다.");
+            throw new BizException("사용자가 존재하지 않습니다.");
         }
 
         // 권한 체크
         if (!Role.ROLE_PARTNER.equals(Role.valueOf(role))) {
-            throw new NeedParterRoleException("파트너 권한이 필요합니다.");
+            throw new BizException("파트너 권한이 필요합니다.");
         }
 
         User user = optionalUser.get();
@@ -230,6 +229,7 @@ public class StoreServiceImpl implements StoreService {
             List<Reservation> reservations = reservationRepository.findReservationsByStoreNameAndDate(storeName, date.atStartOfDay());
             for (Reservation reservation : reservations) {
                 ReservationStateCheckDto dto = new ReservationStateCheckDto();
+                dto.setReservationId(reservation.getId());
                 dto.setReservationTime(reservation.getReservationTime());
                 dto.setStoreName(reservation.getStore().getName());
                 dto.setReservationState(reservation.getStatus().toString());

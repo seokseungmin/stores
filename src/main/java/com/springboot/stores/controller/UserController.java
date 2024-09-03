@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,14 +67,14 @@ public class UserController {
 
         try {
             user = userService.login(userLoginDto);
-        } catch (BizException e) {
-            return ResponseResult.fail(e.getMessage());
+        } catch (Exception e) {
+            throw new BizException(e.getMessage());
         }
 
         UserLoginToken userLoginToken = JWTUtils.createToken(user);
 
         if (userLoginToken == null) {
-            return ResponseResult.fail("토큰 생성에 실패하였습니다.");
+            throw new BizException("토큰 생성에 실패하였습니다.");
         }
 
         return ResponseResult.success("로그인 성공!", userLoginToken);
